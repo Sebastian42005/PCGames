@@ -1,0 +1,85 @@
+﻿@model IEnumerable<PC_Spiele.Models.GameOrders>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Shopping Cart</h1>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game.Price)
+                </th>
+                <th>
+                    Total
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Game.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Amount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Game.Price)€
+                    </td>
+                    <td>
+                        @(item.Game.Price * item.Amount)€
+                    </td>
+                    <td>
+                        <a asp-action="Remove" asp-route-id="@item.Id">Remove</a>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="2"><strong>Total Price:</strong></td>
+                <td>
+                    <strong>@Model.Sum(item => item.Amount * item.Game.Price)€</strong>
+                </td>
+                <td></td>
+                <td>
+                    <a asp-action="Buy" class="btn btn-primary">Buy</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <h5 id="empty" style="color: darkred">Your shopping cart is empty.</h5>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="successMessage" class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<script>
+    window.onload = function () {
+        var successMessage = document.getElementById('successMessage');
+        if (successMessage) {
+            var empty = document.getElementById('empty');
+            empty.classList.add('d-none');
+            setTimeout(function () {
+                successMessage.classList.add('d-none');
+                empty.classList.remove('d-none');
+            }, 2200);
+        }
+    };
+</script>
