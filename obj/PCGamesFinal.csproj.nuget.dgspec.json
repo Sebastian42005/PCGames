@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\Desktop\\SebiSecret\\PCGames\\PCGamesFinal.csproj": {}
+    "C:\\Users\\Admin\\Desktop\\PCGames\\PCGamesFinal.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\Desktop\\SebiSecret\\PCGames\\PCGamesFinal.csproj": {
+    "C:\\Users\\Admin\\Desktop\\PCGames\\PCGamesFinal.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\SebiSecret\\PCGames\\PCGamesFinal.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\PCGames\\PCGamesFinal.csproj",
         "projectName": "PCGamesFinal",
-        "projectPath": "C:\\Users\\Admin\\Desktop\\SebiSecret\\PCGames\\PCGamesFinal.csproj",
+        "projectPath": "C:\\Users\\Admin\\Desktop\\PCGames\\PCGamesFinal.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Desktop\\SebiSecret\\PCGames\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\Desktop\\PCGames\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -79,6 +79,14 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[8.0.1, )"
+            },
+            "PDFsharp": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Rotativa": {
+              "target": "Package",
+              "version": "[1.7.3, )"
             }
           },
           "imports": [
@@ -100,7 +108,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
