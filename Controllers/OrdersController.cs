@@ -1,30 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PCGamesFinal.Data;
 using PC_Spiele.Models;
 using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.AspNetCore.Identity;
+using Rotativa;
+using PCGamesFinal.Service;
 namespace PCGamesFinal.Controllers
 {
     public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly InvoiceGeneratorService _invoiceGeneratorService;
 
-        public OrdersController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+            _invoiceGeneratorService = new InvoiceGeneratorService();
         }
 
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Order.Include(o => o.user);
-            return View(await applicationDbContext.ToListAsync());
+            var user = await GetCurrentUserAsync();
+            var list = _context.Order
+                .Where(o => o.UserId == user.Id)
+                .Include(o => o.user)
+                .ToListAsync();
+            
+            return View(await list);
         }
 
         // GET: Orders/Details/5
@@ -44,6 +51,24 @@ namespace PCGamesFinal.Controllers
             }
 
             return View(order);
+        }
+
+        public async Task<IActionResult> Invoice(int? id)
+        {
+            var order = await _context.Order
+                .Include(o => o.user)
+                .FirstAsync(o => o.Id == id);
+
+            if (order == null)
+                return NotFound();
+
+            var gameOrders = await _context.GameOrders
+                .Where(go => go.Order_id == order.Id)
+                .Include(go => go.Game)
+                .ToListAsync();
+
+            
+            return File(_invoiceGeneratorService.getPDF(order, gameOrders), "application/pdf", "Invoice.pdf");
         }
 
         // GET: Orders/Create
@@ -164,5 +189,8 @@ namespace PCGamesFinal.Controllers
         {
             return _context.Order.Any(e => e.Id == id);
         }
+
+        private Task<IdentityUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
     }
 }

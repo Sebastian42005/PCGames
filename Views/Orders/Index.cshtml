@@ -13,9 +13,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Invoice)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Date)
             </th>
             <th>
@@ -28,18 +25,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Invoice)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Date)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.user.UserName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a class="btn" style="background-color: gray; color: white" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a class="btn btn-primary" asp-action="Invoice" asp-route-id="@item.Id">Invoice</a>
             </td>
         </tr>
 }
