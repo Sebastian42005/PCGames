@@ -15,7 +15,7 @@ namespace PCGamesFinal.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Games");
         }
 
         public IActionResult Privacy()

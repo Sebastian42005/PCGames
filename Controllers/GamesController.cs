@@ -9,6 +9,8 @@ using PCGamesFinal.Data;
 using PC_Spiele.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
+using PCGamesFinal.Models;
 
 namespace PCGamesFinal.Controllers
 {
@@ -42,6 +44,14 @@ namespace PCGamesFinal.Controllers
                 .Include(g => g.PG)
                 .Include(g => g.Publisher)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var categories = _context.CategoryGames
+                .Where(go => go.Game_id == game.Id)
+                .Include(go => go.Category)
+            .Select(go => go.Category);
+
+            ViewBag.Categories = categories;
+
             if (game == null)
             {
                 return NotFound();
@@ -124,6 +134,8 @@ namespace PCGamesFinal.Controllers
         {
             ViewData["PG_id"] = new SelectList(_context.Set<PG>(), "Id", "Name");
             ViewData["Publisher_id"] = new SelectList(_context.Publisher, "Id", "Name");
+
+            ViewData["Categories"] = new SelectList(_context.Category, "Id", "Name");
             return View();
         }
 
@@ -132,16 +144,41 @@ namespace PCGamesFinal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Amount,Price,PG_id,Publisher_id")] Game game)
+        public async Task<IActionResult> Create([Bind("Id,Name,Amount,Price,PG_id,Publisher_id", "selectedCategories")] GameDto gameDto)
         {
+            Game game = new Game();
+            game.Name = gameDto.Name;
+            game.Id = gameDto.Id;
+            game.Price = gameDto.Price;
+            game.Amount = gameDto.Amount;
+            game.Publisher_id = gameDto.Publisher_id;
+            game.Publisher = gameDto.Publisher;
+            game.PG_id = gameDto.PG_id;
+            game.PG = gameDto.PG;
+
             if (ModelState.IsValid)
             {
                 _context.Add(game);
                 await _context.SaveChangesAsync();
+
+                if (gameDto.selectedCategories != null)
+                {
+                    foreach (int categoryId in gameDto.selectedCategories)
+                    {
+                        _context.Add(new CategoryGames { Category_id = categoryId, Game_id = game.Id });
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["PG_id"] = new SelectList(_context.Set<PG>(), "Id", "Name", game.PG_id);
             ViewData["Publisher_id"] = new SelectList(_context.Publisher, "Id", "Name", game.Publisher_id);
+
+            // Pass the list of categories to the view
+            ViewData["Categories"] = new SelectList(_context.Category, "Id", "Name");
+
             return View(game);
         }
 

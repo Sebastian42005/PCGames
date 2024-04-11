@@ -1,14 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using PC_Spiele.Models;
 using PCGamesFinal.Data;
 using PCGamesFinal.Models;
-using System.Collections;
-using System.Runtime.Intrinsics.Arm;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PCGamesFinal.Controllers
 {
@@ -33,6 +28,38 @@ namespace PCGamesFinal.Controllers
             .ToListAsync();
 
             ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+
+			var detailDataPoints = new List<DataPoint2>();
+			var gameOrders = await _context.GameOrders
+                .Include(go => go.Game)
+                .Include(go => go.Order)
+                .ToListAsync();
+
+			gameOrders.Sort((x, y) => x.Order.Date.CompareTo(y.Order.Date));
+
+			gameOrders.ForEach(go =>
+			{
+				var currentDataPoint = detailDataPoints.FirstOrDefault(dp => dp.date.DayOfYear == go.Order.Date.DayOfYear);
+				if (currentDataPoint != null)
+				{
+					detailDataPoints.Remove(currentDataPoint);
+					currentDataPoint.y = currentDataPoint.y + (go.Amount * go.Game.Price);
+					detailDataPoints.Add(currentDataPoint);
+				}
+				else
+				{
+					DateTime date = go.Order.Date;
+					date = date.Date;
+
+					var newDetailPoint = new DataPoint2(date.ToString("dd.MM.yyyy"), go.Amount);
+					newDetailPoint.date = go.Order.Date;
+					detailDataPoints.Add(newDetailPoint);
+				}
+			});
+
+
+			ViewBag.DetailDataPoints = JsonConvert.SerializeObject(detailDataPoints);
+
 
 			return View();
         }
@@ -72,7 +99,8 @@ namespace PCGamesFinal.Controllers
 				}
 				else
                 {
-					DateTime date = go.Order.Date; 
+					DateTime date = go.Order.Date;
+                    date = date.Date;
 
 					long unixTimeMilliseconds = (long)(date - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
 

@@ -1,4 +1,4 @@
-﻿@model PC_Spiele.Models.Game
+﻿@model PC_Spiele.Models.GameDto
 
 @{
     ViewData["Title"] = "Create";
@@ -28,12 +28,16 @@
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PG_id" class="control-label"></label>
+                <label asp-for="PG" class="control-label"></label>
                 <select asp-for="PG_id" class ="form-control" asp-items="ViewBag.PG_id"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Publisher_id" class="control-label"></label>
+                <label asp-for="Publisher" class="control-label"></label>
                 <select asp-for="Publisher_id" class ="form-control" asp-items="ViewBag.Publisher_id"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="selectedCategories" class="control-label">Categories</label>
+                <select asp-for="selectedCategories" class="form-control custom-select" asp-items="@((SelectList)ViewData["Categories"])" multiple></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

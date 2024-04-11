@@ -26,12 +26,21 @@ namespace PCGamesFinal.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await GetCurrentUserAsync();
-            var list = _context.Order
-                .Where(o => o.UserId == user.Id)
-                .Include(o => o.user)
-                .ToListAsync();
-            
-            return View(await list);
+            var list = new List<Order>();
+            if (User.IsInRole("Admin"))
+            {
+                list = await _context.Order
+                    .Include(o => o.user)
+                    .ToListAsync();
+            }else
+            {
+                list = await _context.Order
+                                  .Include(o => o.user)
+                                  .Where(o => o.UserId == user.Id)
+                                  .ToListAsync();
+            }
+
+            return View(list);
         }
 
         // GET: Orders/Details/5

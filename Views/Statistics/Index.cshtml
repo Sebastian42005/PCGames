@@ -1,35 +1,79 @@
 ﻿<!DOCTYPE HTML>
 <html>
 <head>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 <script>
 window.onload = function () {
- 
-	var chart = new CanvasJS.Chart("chartContainer", {
-		animationEnabled: true,
-		theme: "light2", // "light1", "dark1", "dark2"
-		exportEnabled: true,
-		title: {
-			text: "Most ordered Games"
-		},
-	
-		data: [{
-			type: "column",
-			dataPoints:  @Html.Raw(ViewBag.DataPoints)
-		}]
-	});
-	chart.render();
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+                theme: "light2", // "light1", "dark1", "dark2"
+        exportEnabled: true,
+        title: {
+            text: "Most ordered Games"
+        },
+        data: [{
+            type: "column",
+            dataPoints: @Html.Raw(ViewBag.DataPoints)
+        }]
+    });
+    chart.render();
 
-	chart.options.data[0].click = function (e) {
-		var id = e.dataPoint.id;
+    chart.options.data[0].click = function (e) {
+        var id = e.dataPoint.id;
+        window.location.href = '/Statistics/Details/' + id;
+    };
 
-		window.location.href = '/Statistics/Details/' + id;
-	};
+
+    var detailDataPoints = @Html.Raw(ViewBag.DetailDataPoints);
+            var formattedDataPoints = detailDataPoints.map(function (dataPoint) {
+                var dateParts = dataPoint.x.split('.');
+                var formattedDate = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+                return {
+                    x: formattedDate,
+                    y: dataPoint.y
+                };
+            });
+
+            var chart2 = new CanvasJS.Chart("chartContainer2", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "Daily Sales"
+                },
+                axisY: {
+                    title: "Price",
+                    titleFontSize: 24,
+                    prefix: "€",
+                    crosshair: {
+                        enabled: true,
+                        valueFormatString: "€#",
+                        snapToDataPoint: true
+                    }
+                },
+                axisX: {
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    },
+                    valueFormatString: "MMM DD YYYY" 
+                },
+                data: [{
+                    type: "line",
+                    yValueFormatString: "€#",
+                    dataPoints: formattedDataPoints
+                }]
+            });
+
+    chart2.render();
 }
 </script>
 </head>
 <body>
 <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<div id="chartContainer2" style="height: 370px; width: 100%; margin-top: 50px"></div>
 <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
 </body>
 </html>   

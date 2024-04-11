@@ -288,6 +288,10 @@ namespace PCGamesFinal.Data.Migrations
                     b.Property<int>("Publisher_id")
                         .HasColumnType("int");
 
+                    b.Property<string>("selectedCategories")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PG_id");

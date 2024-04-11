@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PC_Spiele.Models
 {
-    public class Game
+    public class GameDto
     {
         [Key]
         public int Id { get; set; }
@@ -18,8 +18,6 @@ namespace PC_Spiele.Models
         [ForeignKey("Publisher")]
         public int Publisher_id { get; set; }
         public virtual Publisher? Publisher { get; set; }
-
-        public ICollection<CategoryGames> CategoryGames { get; set; } = new List<CategoryGames>();
-        public ICollection<GameOrders> GameOrders { get; set; } = new List<GameOrders>();
+        public int[] selectedCategories { get; set; }
     }
 }

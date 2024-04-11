@@ -34,7 +34,15 @@
                         @Html.DisplayFor(modelItem => item.Game.Name)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Amount)
+                        <div class="input-group" style="width: 50%">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary" type="button" onclick="changeAmount('@item.Id', -1)">-</button>
+                            </div>
+                            <input type="text" class="form-control amount-input" id="amount_@item.Id" value="@item.Amount" readonly />
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" onclick="changeAmount('@item.Id', 1)">+</button>
+                            </div>
+                        </div>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Game.Price)€
@@ -43,7 +51,7 @@
                         @(item.Game.Price * item.Amount)€
                     </td>
                     <td>
-                        <a asp-action="Remove" asp-route-id="@item.Id">Remove</a>
+                        <a class="btn btn-danger" asp-action="Remove" asp-route-id="@item.Id">Remove</a>
                     </td>
                 </tr>
             }
@@ -70,6 +78,13 @@ else
         @TempData["SuccessMessage"]
     </div>
 }
+
+@if (TempData["FailMessage"] != null)
+{
+    <div id="failMessage" class="alert alert-danger" role="alert">
+        @TempData["FailMessage"]
+    </div>
+}
 <script>
     window.onload = function () {
         var successMessage = document.getElementById('successMessage');
@@ -81,5 +96,35 @@ else
                 empty.classList.remove('d-none');
             }, 2200);
         }
+
+        var successMessage = document.getElementById('failMessage');
+        if (successMessage) {
+            var empty = document.getElementById('empty');
+            empty.classList.add('d-none');
+            setTimeout(function () {
+                successMessage.classList.add('d-none');
+                empty.classList.remove('d-none');
+            }, 2200);
+        }
     };
+
+    function reloadPage() {
+        window.location.reload();
+    }
+
+    function changeAmount(id, newAmount) {
+        fetch(`/ShoppingCart/ChangeOrderGameAmount?id=${id}&amount=${newAmount}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(response => response.json())
+            .then(data => {
+                console.log(data);
+                reloadPage(); // Lädt die Seite neu, um die Änderungen anzuzeigen
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
 </script>
