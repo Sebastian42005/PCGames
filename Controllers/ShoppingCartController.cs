@@ -125,7 +125,7 @@ namespace PCGamesFinal.Controllers
             {
                 if (go.Game.Amount < go.Amount)
                 {
-                    TempData["FailMessage"] = "We only have " + go.Game.Amount + " amounts of the Game" + go.Game.Name;
+                    TempData["FailMessage"] = "We only have " + go.Game.Amount + " amounts of the Game '" + go.Game.Name + "' in stock";
                     return RedirectToAction(nameof(Index));
                 }
             }

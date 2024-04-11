@@ -53,9 +53,14 @@
                 @Html.DisplayFor(modelItem => item.Publisher.Id)
             </td>
             <td>
-                    <a class="btn" style="background-color: green; color: white" asp-action="Buy" asp-route-id="@item.Id">Buy</a>
+                    @if (@item.Amount > 0)
+                    {
+                        <a class="btn" style="background-color: green; color: white" asp-action="Buy" asp-route-id="@item.Id">Buy</a>
+                    } else 
+                    {
+                        <a class="btn" style="background-color: gray; color: white; pointer-events: none; cursor: default;" asp-action="Buy" asp-route-id="@item.Id">Buy</a>
+                    }
                     <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Details</a>
-
                     @if (isAdmin)
                     {
                         <a class="btn" style="background-color: gray; color: white" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
