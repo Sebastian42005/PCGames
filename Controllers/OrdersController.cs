@@ -40,6 +40,8 @@ namespace PCGamesFinal.Controllers
                                   .ToListAsync();
             }
 
+            list.Sort((x, y) => x.Date.CompareTo(y.Date));
+
             return View(list);
         }
 
