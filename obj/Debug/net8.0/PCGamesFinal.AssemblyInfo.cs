@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PCGamesFinal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0bdb09f7c9d2e1eaca02e3e54517f0d21c82dea7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0e4e1a50d4757724ea3f9253f51b2393aadd8e89")]
 [assembly: System.Reflection.AssemblyProductAttribute("PCGamesFinal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PCGamesFinal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
